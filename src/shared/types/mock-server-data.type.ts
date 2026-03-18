@@ -7,6 +7,5 @@ export type MockServerData = {
   authorNames: string[],
   authorEmails: string[],
   authorAvatars: string[],
-  authorPasswords: string[],
   coordinatesValues: [number, number][]
 };
