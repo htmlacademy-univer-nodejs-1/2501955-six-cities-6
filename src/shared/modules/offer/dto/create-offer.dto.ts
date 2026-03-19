@@ -9,7 +9,6 @@ export class CreateOfferDto {
   public housingImages!: string[];
   public isPremium!: boolean;
   public isFavorite!: boolean;
-  public rating!: number;
   public housingType!: HousingType;
   public roomsCount!: number;
   public guestsCount!: number;
