@@ -8,3 +8,4 @@ export * from './enums/amenity-type.enum.js';
 export * from './enums/housing-type.enum.js';
 export * from './enums/user-type.enum.js';
 export * from './enums/component.enum.js';
+export * from './enums/sort-type.enum.js';
