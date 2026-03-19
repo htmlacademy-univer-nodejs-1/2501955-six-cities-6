@@ -6,3 +6,5 @@ export * from './interfaces/offer-service.interface.js';
 export * from './services/default-offer.service.js';
 export * from './coordinates.schema.js';
 export * from './constants/offer.constant.js';
+export * from './dto/offer-full-dto.type.js';
+export * from './dto/offer-preview-dto.type.js';
