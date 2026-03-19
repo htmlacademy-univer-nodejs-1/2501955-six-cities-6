@@ -44,7 +44,6 @@ export class TSVOfferGenerator implements IOfferGenerator {
     const authorName = getRandomItem(this._mockData.authorNames);
     const authorEmail = getRandomItem(this._mockData.authorEmails);
     const authorAvatar = getRandomItem(this._mockData.authorAvatars);
-    const authorPassword = getRandomItem(this._mockData.authorPasswords);
     const authorType = getRandomItem<string>(Object.values(UserType));
     const commentsCount = generateRandomValue(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT).toString();
     const coordinates = getRandomItem(this._mockData.coordinatesValues).join(';');
@@ -67,7 +66,6 @@ export class TSVOfferGenerator implements IOfferGenerator {
       authorName,
       authorEmail,
       authorAvatar,
-      authorPassword,
       authorType,
       commentsCount,
       coordinates
