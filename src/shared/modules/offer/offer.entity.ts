@@ -30,12 +30,6 @@ export class OfferEntity extends defaultClasses.TimeStamps {
 
   @prop({
     required: true,
-    default: () => new Date()
-  })
-  public publishDate!: Date;
-
-  @prop({
-    required: true,
     trim: true,
     enum: [
       'Paris',
@@ -72,13 +66,6 @@ export class OfferEntity extends defaultClasses.TimeStamps {
     default: false
   })
   public isFavorite!: boolean;
-
-  @prop({
-    required: true,
-    min: 1,
-    max: 5
-  })
-  public rating!: number;
 
   @prop({
     required: true,
