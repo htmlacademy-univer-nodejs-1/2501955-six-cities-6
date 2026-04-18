@@ -21,6 +21,7 @@
   "devDependencies": {
     "@types/convict": "6.1.6",
     "@types/convict-format-with-validator": "6.0.6",
+    "@types/express": "5.0.6",
     "@types/got": "9.6.12",
     "@types/node": "24.10.14",
     "@types/pino": "7.0.4",
@@ -48,6 +49,7 @@
     "convict-format-with-validator": "6.2.0",
     "dayjs": "1.11.19",
     "dotenv": "17.3.1",
+    "express": "5.2.1",
     "got": "13.0.0",
     "inversify": "7.11.0",
     "mongoose": "9.1.6",
