@@ -5,7 +5,7 @@ import { Component } from '../shared/types/index.js';
 import { IDatabaseClient } from '../shared/libs/database-client/index.js';
 import { getMongoURI } from '../shared/helpers/database.helper.js';
 import express, { Express } from 'express';
-import { IController } from '../shared/libs/rest/index.js';
+import { IController, IExceptionFilter } from '../shared/libs/rest/index.js';
 
 @injectable()
 export class RestApplication {
@@ -16,7 +16,8 @@ export class RestApplication {
     @inject(Component.Config) private readonly _config: IConfig<RestSchema>,
     @inject(Component.DatabaseClient) private readonly _databaseClient: IDatabaseClient,
     @inject(Component.UserController) private readonly _userController: IController,
-    @inject(Component.OfferController) private readonly _offerController: IController
+    @inject(Component.OfferController) private readonly _offerController: IController,
+    @inject(Component.ExceptionFilter) private readonly _appExceptionFilter: IExceptionFilter
   ) {
     this._server = express();
   }
@@ -28,9 +29,17 @@ export class RestApplication {
     await this.initDb();
     this._logger.info('Database has been inited');
 
+    this._logger.info('Init app-level middleware...');
+    await this.initMiddleware();
+    this._logger.info('App-level middleware has been inited');
+
     this._logger.info('Init controllers...');
     await this.initControllers();
     this._logger.info('Controllers have been inited');
+
+    this._logger.info('Init exception filters...');
+    await this.initExceptionFilters();
+    this._logger.info('Exception filters have been inited');
 
     this._logger.info('Init server...');
     await this.initServer();
@@ -49,9 +58,17 @@ export class RestApplication {
     return this._databaseClient.connect(mongoUri);
   }
 
+  private async initMiddleware(): Promise<void> {
+    this._server.use(express.json());
+  }
+
   private async initControllers(): Promise<void> {
     this._server.use('/users', this._userController.router);
     this._server.use('/offers', this._offerController.router);
+  }
+
+  private async initExceptionFilters(): Promise<void> {
+    this._server.use(this._appExceptionFilter.catch.bind(this._appExceptionFilter));
   }
 
   private async initServer(): Promise<void> {
