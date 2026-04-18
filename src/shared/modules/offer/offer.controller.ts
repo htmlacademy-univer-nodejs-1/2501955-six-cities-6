@@ -4,6 +4,8 @@ import { BaseController, HttpMethod } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { ILogger } from '../../libs/logger/index.js';
 import { IOfferService } from './interfaces/offer-service.interface.js';
+import { fillDTO } from '../../helpers/index.js';
+import { OfferPreviewRdo } from './rdo/offer-preview.rdo.js';
 
 @injectable()
 export class OfferController extends BaseController {
@@ -20,7 +22,8 @@ export class OfferController extends BaseController {
 
   public async index(_req: Request, res: Response): Promise<void> {
     const offers = await this._offerService.find();
-    this.ok(res, offers);
+    const responseData = fillDTO(OfferPreviewRdo, offers);
+    this.ok(res, responseData);
   }
 
   public create(_req: Request, _res: Response): void {
