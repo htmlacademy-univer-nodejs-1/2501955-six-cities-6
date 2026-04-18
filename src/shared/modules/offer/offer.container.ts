@@ -4,6 +4,8 @@ import { Component } from '../../types/index.js';
 import { DefaultOfferService } from './services/default-offer.service.js';
 import { types } from '@typegoose/typegoose';
 import { OfferEntity, OfferModel } from './offer.entity.js';
+import { IController } from '../../libs/rest/index.js';
+import { OfferController } from './offer.controller.js';
 
 export function createOfferContainer(): ContainerModule {
   return new ContainerModule(({ bind }) => {
@@ -12,5 +14,9 @@ export function createOfferContainer(): ContainerModule {
 
     bind<types.ModelType<OfferEntity>>(Component.OfferModel)
       .toConstantValue(OfferModel);
+
+    bind<IController>(Component.OfferController)
+      .to(OfferController)
+      .inSingletonScope();
   });
 }
