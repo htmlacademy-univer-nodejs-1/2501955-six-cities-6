@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, HttpError, HttpMethod, HttpRequest, RequestQuery } from '../../libs/rest/index.js';
+import { BaseController, HttpError, HttpMethod, HttpRequest, RequestQuery, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { ILogger } from '../../libs/logger/index.js';
 import { IOfferService } from './interfaces/offer-service.interface.js';
@@ -29,13 +29,48 @@ export class OfferController extends BaseController {
       { path: '/', method: HttpMethod.Post, handler: this.create },
       { path: '/favorite', method: HttpMethod.Get, handler: this.indexFavorite },
       { path: '/premium/:city', method: HttpMethod.Get, handler: this.indexPremium },
-      { path: '/:offerId', method: HttpMethod.Get, handler: this.show },
-      { path: '/:offerId', method: HttpMethod.Patch, handler: this.update },
-      { path: '/:offerId', method: HttpMethod.Delete, handler: this.delete },
-      { path: '/:offerId/favorite', method: HttpMethod.Post, handler: this.makeFavorite },
-      { path: '/:offerId/favorite', method: HttpMethod.Delete, handler: this.removeFavorite },
-      { path: '/:offerId/comments', method: HttpMethod.Get, handler: this.indexComments },
-      { path: '/:offerId/comments', method: HttpMethod.Post, handler: this.createComment }
+      {
+        path: '/:offerId',
+        method: HttpMethod.Get,
+        handler: this.show,
+        middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      },
+      {
+        path: '/:offerId',
+        method: HttpMethod.Patch,
+        handler: this.update,
+        middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      },
+      {
+        path: '/:offerId',
+        method: HttpMethod.Delete,
+        handler: this.delete,
+        middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      },
+      {
+        path: '/:offerId/favorite',
+        method: HttpMethod.Post,
+        handler: this.makeFavorite ,
+        middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      },
+      {
+        path: '/:offerId/favorite',
+        method: HttpMethod.Delete,
+        handler: this.removeFavorite,
+        middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      },
+      {
+        path: '/:offerId/comments',
+        method: HttpMethod.Get,
+        handler: this.indexComments,
+        middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      },
+      {
+        path: '/:offerId/comments',
+        method: HttpMethod.Post,
+        handler: this.createComment,
+        middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      }
     ]);
   }
 
