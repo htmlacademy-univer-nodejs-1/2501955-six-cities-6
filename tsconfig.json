@@ -19,10 +19,8 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "outDir": "./dist",
+    "rootDir": "./src",
     "emitDecoratorMetadata": true,
-    "types": [
-      "node",
-    ],
     "typeRoots": [
       "node_modules/@types",
     ],
@@ -38,6 +36,8 @@
     "**/*.test.ts"
   ],
   "ts-node": {
-    "esm": true
+    "esm": true,
+    "logError": true,
+    "pretty": true
   }
 }
