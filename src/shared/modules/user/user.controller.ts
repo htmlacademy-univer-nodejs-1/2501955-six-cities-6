@@ -24,7 +24,7 @@ export class UserController extends BaseController {
     this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create });
     this.addRoute({ path: '/auth/login', method: HttpMethod.Post, handler: this.login });
     this.addRoute({ path: '/auth/logout', method: HttpMethod.Post, handler: this.logout });
-    this.addRoute({ path: '/auth/status', method: HttpMethod.Get, handler: this.status });
+    this.addRoute({ path: '/auth/status', method: HttpMethod.Get, handler: this.getStatus });
   }
 
   public async create(
@@ -84,7 +84,7 @@ export class UserController extends BaseController {
     );
   }
 
-  public async status(
+  public async getStatus(
     _req: Request,
     _res: Response
   ): Promise<void> {
