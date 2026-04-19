@@ -8,13 +8,13 @@ export class CommentRdo {
   @Expose()
   public text!: string;
 
-  @Expose()
+  @Expose({ name: 'createdAt' })
   public publishDate!: Date;
 
   @Expose()
   public rating!: number;
 
-  @Expose()
+  @Expose({ name: 'authorId' })
   @Type(() => UserRdo)
   public author!: UserRdo;
 }

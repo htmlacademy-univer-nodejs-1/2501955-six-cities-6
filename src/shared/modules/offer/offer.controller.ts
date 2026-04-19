@@ -11,7 +11,7 @@ import { OfferRdo } from './rdo/offer.rdo.js';
 import { StatusCodes } from 'http-status-codes';
 import { OfferIdRequestParam } from './types/offer-id-request-param.type.js';
 import { UpdateOfferDto } from './dto/update-offer.dto.js';
-import { ICommentService } from '../comment/index.js';
+import { CommentRdo, CreateCommentDto, ICommentService } from '../comment/index.js';
 import { CityRequestParam } from './types/city-request-param.type.js';
 
 @injectable()
@@ -33,6 +33,8 @@ export class OfferController extends BaseController {
     this.addRoute({ path: '/:offerId', method: HttpMethod.Delete, handler: this.delete });
     this.addRoute({ path: '/:offerId/favorite', method: HttpMethod.Post, handler: this.makeFavorite });
     this.addRoute({ path: '/:offerId/favorite', method: HttpMethod.Delete, handler: this.removeFavorite });
+    this.addRoute({ path: '/:offerId/comments', method: HttpMethod.Get, handler: this.indexComments });
+    this.addRoute({ path: '/:offerId/comments', method: HttpMethod.Post, handler: this.createComment });
   }
 
   public async index(
@@ -135,8 +137,7 @@ export class OfferController extends BaseController {
     const offerId = Array.isArray(params.offerId)
       ? params.offerId[0]
       : params.offerId;
-    const offer = await this._offerService.findById(offerId);
-    if (!offer) {
+    if (!await this._offerService.exists(offerId)) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
         `Offer with id ${offerId} not found`,
@@ -155,8 +156,7 @@ export class OfferController extends BaseController {
     const offerId = Array.isArray(params.offerId)
       ? params.offerId[0]
       : params.offerId;
-    const offer = await this._offerService.findById(offerId);
-    if (!offer) {
+    if (!await this._offerService.exists(offerId)) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
         `Offer with id ${offerId} not found`,
@@ -166,5 +166,43 @@ export class OfferController extends BaseController {
 
     await this._offerService.removeFromFavorite(offerId);
     this.noContent(res, void 0);
+  }
+
+  public async indexComments(
+    { params }: Request<OfferIdRequestParam>,
+    res: Response
+  ): Promise<void> {
+    const offerId = Array.isArray(params.offerId)
+      ? params.offerId[0]
+      : params.offerId;
+    if (!await this._offerService.exists(offerId)) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${offerId} not found`,
+        'OfferController'
+      );
+    }
+
+    const comments = await this._commentService.findByOfferId(offerId);
+    this.ok(res, fillDTO(CommentRdo, comments));
+  }
+
+  public async createComment(
+    { body, params }: Request<OfferIdRequestParam, unknown, CreateCommentDto>,
+    res: Response
+  ): Promise<void> {
+    const offerId = Array.isArray(params.offerId)
+      ? params.offerId[0]
+      : params.offerId;
+    if (!await this._offerService.exists(offerId)) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${offerId} not found`,
+        'OfferController'
+      );
+    }
+
+    const comment = await this._commentService.create(offerId, body);
+    this.created(res, fillDTO(CommentRdo, comment));
   }
 }
