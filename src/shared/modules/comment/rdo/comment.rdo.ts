@@ -1,4 +1,4 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { UserRdo } from '../../user/index.js';
 
 export class CommentRdo {
@@ -15,5 +15,6 @@ export class CommentRdo {
   public rating!: number;
 
   @Expose()
+  @Type(() => UserRdo)
   public author!: UserRdo;
 }
