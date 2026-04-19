@@ -24,17 +24,19 @@ export class OfferController extends BaseController {
     super(logger);
 
     this.logger.info('Registering routes for OfferController...');
-    this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.index });
-    this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create });
-    this.addRoute({ path: '/favorite', method: HttpMethod.Get, handler: this.indexFavorite });
-    this.addRoute({ path: '/premium/:city', method: HttpMethod.Get, handler: this.indexPremium });
-    this.addRoute({ path: '/:offerId', method: HttpMethod.Get, handler: this.show });
-    this.addRoute({ path: '/:offerId', method: HttpMethod.Patch, handler: this.update });
-    this.addRoute({ path: '/:offerId', method: HttpMethod.Delete, handler: this.delete });
-    this.addRoute({ path: '/:offerId/favorite', method: HttpMethod.Post, handler: this.makeFavorite });
-    this.addRoute({ path: '/:offerId/favorite', method: HttpMethod.Delete, handler: this.removeFavorite });
-    this.addRoute({ path: '/:offerId/comments', method: HttpMethod.Get, handler: this.indexComments });
-    this.addRoute({ path: '/:offerId/comments', method: HttpMethod.Post, handler: this.createComment });
+    this.addRoutes([
+      { path: '/', method: HttpMethod.Get, handler: this.index },
+      { path: '/', method: HttpMethod.Post, handler: this.create },
+      { path: '/favorite', method: HttpMethod.Get, handler: this.indexFavorite },
+      { path: '/premium/:city', method: HttpMethod.Get, handler: this.indexPremium },
+      { path: '/:offerId', method: HttpMethod.Get, handler: this.show },
+      { path: '/:offerId', method: HttpMethod.Patch, handler: this.update },
+      { path: '/:offerId', method: HttpMethod.Delete, handler: this.delete },
+      { path: '/:offerId/favorite', method: HttpMethod.Post, handler: this.makeFavorite },
+      { path: '/:offerId/favorite', method: HttpMethod.Delete, handler: this.removeFavorite },
+      { path: '/:offerId/comments', method: HttpMethod.Get, handler: this.indexComments },
+      { path: '/:offerId/comments', method: HttpMethod.Post, handler: this.createComment }
+    ]);
   }
 
   public async index(

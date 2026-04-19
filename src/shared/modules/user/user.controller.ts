@@ -21,10 +21,12 @@ export class UserController extends BaseController {
     super(logger);
 
     this.logger.info('Registering routes for UserController...');
-    this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create });
-    this.addRoute({ path: '/auth/login', method: HttpMethod.Post, handler: this.login });
-    this.addRoute({ path: '/auth/logout', method: HttpMethod.Post, handler: this.logout });
-    this.addRoute({ path: '/auth/status', method: HttpMethod.Get, handler: this.getStatus });
+    this.addRoutes([
+      { path: '/register', method: HttpMethod.Post, handler: this.create },
+      { path: '/auth/login', method: HttpMethod.Post, handler: this.login },
+      { path: '/auth/logout', method: HttpMethod.Post, handler: this.logout },
+      { path: '/auth/status', method: HttpMethod.Get, handler: this.getStatus }
+    ]);
   }
 
   public async create(
