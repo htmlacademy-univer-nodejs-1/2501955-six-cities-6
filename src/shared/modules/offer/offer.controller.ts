@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, HttpMethod, RequestBody, RequestParams } from '../../libs/rest/index.js';
+import { BaseController, HttpMethod, HttpRequest } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { ILogger } from '../../libs/logger/index.js';
 import { IOfferService } from './interfaces/offer-service.interface.js';
@@ -29,7 +29,7 @@ export class OfferController extends BaseController {
   }
 
   public async create(
-    { body }: Request<RequestParams, RequestBody, CreateOfferDto>,
+    { body }: HttpRequest<CreateOfferDto>,
     res: Response
   ): Promise<void> {
     const result = await this._offerService.create(body);

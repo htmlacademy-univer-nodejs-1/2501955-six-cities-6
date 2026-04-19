@@ -1,15 +1,15 @@
 import { inject, injectable } from 'inversify';
-import { Response } from 'express';
-import { BaseController, HttpError, HttpMethod } from '../../libs/rest/index.js';
+import { Request, Response } from 'express';
+import { BaseController, HttpError, HttpMethod, HttpRequest } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { ILogger } from '../../libs/logger/index.js';
 import { IUserService } from './interfaces/user-service.interface.js';
-import { CreateUserRequest } from './types/create-user-request.type.js';
 import { StatusCodes } from 'http-status-codes';
 import { IConfig, RestSchema } from '../../libs/config/index.js';
 import { fillDTO } from '../../helpers/common.helper.js';
 import { UserRdo } from './rdo/user.rdo.js';
-import { LoginUserRequest } from './types/login-user-request.type.js';
+import { CreateUserDto } from './dto/create-user.dto.js';
+import { LoginUserDto } from './dto/login-user.dto.js';
 
 @injectable()
 export class UserController extends BaseController {
@@ -23,10 +23,12 @@ export class UserController extends BaseController {
     this.logger.info('Registering routes for UserController...');
     this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create });
     this.addRoute({ path: '/auth/login', method: HttpMethod.Post, handler: this.login });
+    this.addRoute({ path: '/auth/logout', method: HttpMethod.Post, handler: this.logout });
+    this.addRoute({ path: '/auth/status', method: HttpMethod.Get, handler: this.status });
   }
 
   public async create(
-    { body }: CreateUserRequest,
+    { body }: HttpRequest<CreateUserDto>,
     res: Response
   ): Promise<void> {
     const existsUser = await this._userService.findByEmail(body.email);
@@ -44,7 +46,7 @@ export class UserController extends BaseController {
   }
 
   public async login(
-    { body }: LoginUserRequest,
+    { body }: HttpRequest<LoginUserDto>,
     _res: Response
   ): Promise<void> {
     const existsUser = await this._userService.findByEmail(body.email);
@@ -56,7 +58,36 @@ export class UserController extends BaseController {
         'UserController'
       );
     }
+    if (!(existsUser.getPassword() === body.password)) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        'Invalid password',
+        'UserController'
+      );
+    }
 
+    throw new HttpError(
+      StatusCodes.NOT_IMPLEMENTED,
+      'Not implemented',
+      'UserController'
+    );
+  }
+
+  public async logout(
+    _req: Request,
+    _res: Response
+  ): Promise<void> {
+    throw new HttpError(
+      StatusCodes.NOT_IMPLEMENTED,
+      'Not implemented',
+      'UserController'
+    );
+  }
+
+  public async status(
+    _req: Request,
+    _res: Response
+  ): Promise<void> {
     throw new HttpError(
       StatusCodes.NOT_IMPLEMENTED,
       'Not implemented',

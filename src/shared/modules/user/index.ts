@@ -6,5 +6,3 @@ export * from './services/default-user.service.js';
 export * from './dto/create-user.dto.js';
 export * from './dto/login-user.dto.js';
 export * from './rdo/user.rdo.js';
-export * from './types/create-user-request.type.js';
-export * from './types/login-user-request.type.js';
