@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, HttpError, HttpMethod, HttpRequest } from '../../libs/rest/index.js';
+import { BaseController, HttpError, HttpMethod, HttpRequest, RequestQuery } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { ILogger } from '../../libs/logger/index.js';
 import { IOfferService } from './interfaces/offer-service.interface.js';
@@ -35,8 +35,11 @@ export class OfferController extends BaseController {
     this.addRoute({ path: '/:offerId/favorite', method: HttpMethod.Delete, handler: this.removeFavorite });
   }
 
-  public async index(_req: Request, res: Response): Promise<void> {
-    const offers = await this._offerService.find();
+  public async index(
+    { query }: Request<unknown, unknown, unknown, RequestQuery>,
+    res: Response
+  ): Promise<void> {
+    const offers = await this._offerService.find(query.limit);
     this.ok(res, fillDTO(OfferPreviewRdo, offers));
   }
 
@@ -93,7 +96,15 @@ export class OfferController extends BaseController {
     const offerId = Array.isArray(params.offerId)
       ? params.offerId[0]
       : params.offerId;
-    await this._offerService.deleteById(offerId);
+    const deletedOffer = this._offerService.deleteById(offerId);
+    if (!deletedOffer) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${offerId} not found`,
+        'OfferController'
+      );
+    }
+
     await this._commentService.deleteByOfferId(offerId);
     this.noContent(res, void 0);
   }
@@ -124,6 +135,15 @@ export class OfferController extends BaseController {
     const offerId = Array.isArray(params.offerId)
       ? params.offerId[0]
       : params.offerId;
+    const offer = await this._offerService.findById(offerId);
+    if (!offer) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${offerId} not found`,
+        'OfferController'
+      );
+    }
+
     await this._offerService.addToFavorite(offerId);
     this.created(res, void 0);
   }
@@ -135,6 +155,15 @@ export class OfferController extends BaseController {
     const offerId = Array.isArray(params.offerId)
       ? params.offerId[0]
       : params.offerId;
+    const offer = await this._offerService.findById(offerId);
+    if (!offer) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${offerId} not found`,
+        'OfferController'
+      );
+    }
+
     await this._offerService.removeFromFavorite(offerId);
     this.noContent(res, void 0);
   }

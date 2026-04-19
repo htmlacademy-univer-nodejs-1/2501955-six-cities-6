@@ -7,7 +7,7 @@ export interface IOfferService {
   create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>>;
   findById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
   find(count?: number): Promise<Array<DocumentType<OfferEntity>>>;
-  deleteById(offerId: string): Promise<void>;
+  deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
   updateById(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null>;
   findPremium(city: string): Promise<Array<DocumentType<OfferEntity>>>;
   findFavorite(): Promise<Array<DocumentType<OfferEntity>>>;
