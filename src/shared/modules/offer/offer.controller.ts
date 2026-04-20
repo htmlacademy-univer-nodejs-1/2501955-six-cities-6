@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, HttpError, HttpMethod, HttpRequest, RequestQuery, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, HttpError, HttpMethod, HttpRequest, RequestQuery, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { ILogger } from '../../libs/logger/index.js';
 import { IOfferService } from './interfaces/offer-service.interface.js';
@@ -26,7 +26,12 @@ export class OfferController extends BaseController {
     this.logger.info('Registering routes for OfferController...');
     this.addRoutes([
       { path: '/', method: HttpMethod.Get, handler: this.index },
-      { path: '/', method: HttpMethod.Post, handler: this.create },
+      {
+        path: '/',
+        method: HttpMethod.Post,
+        handler: this.create,
+        middlewares: [new ValidateDtoMiddleware(CreateOfferDto)]
+      },
       { path: '/favorite', method: HttpMethod.Get, handler: this.indexFavorite },
       { path: '/premium/:city', method: HttpMethod.Get, handler: this.indexPremium },
       {
@@ -50,7 +55,7 @@ export class OfferController extends BaseController {
       {
         path: '/:offerId/favorite',
         method: HttpMethod.Post,
-        handler: this.makeFavorite ,
+        handler: this.makeFavorite,
         middlewares: [new ValidateObjectIdMiddleware('offerId')]
       },
       {
