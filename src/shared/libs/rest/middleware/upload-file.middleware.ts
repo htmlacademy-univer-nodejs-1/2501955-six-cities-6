@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { IMiddleware } from './interfaces/middleware.interface.js';
 import multer, { diskStorage } from 'multer';
 import { extension } from 'mime-types';
 import { nanoid } from 'nanoid';
+import { IMiddleware } from './interfaces/middleware.interface.js';
 
 export class UploadFileMiddleware implements IMiddleware {
   constructor(
