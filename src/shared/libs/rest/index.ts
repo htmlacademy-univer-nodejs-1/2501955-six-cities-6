@@ -1,5 +1,5 @@
 export * from './enums/http-method.enum.js';
-export * from './interfaces/route.interface.js';
+export * from './interfaces/index.js';
 export * from './controller/index.js';
 export * from './exception-filter/index.js';
 export * from './types/index.js';
