@@ -19,9 +19,16 @@ export abstract class BaseController implements IController {
     return this._router;
   }
 
-  public addRoute(route: IRoute): void {
-    this._router[route.method](route.path, route.handler.bind(this));
-    this.logger.info(`Route registered: ${route.method.toUpperCase()} ${route.path}`);
+  public addRoutes(routes: IRoute[]): void {
+    routes.forEach((route) => {
+      const handlers = [
+        ...(route.middlewares?.map((item) => item.execute.bind(item)) ?? []),
+        route.handler.bind(this)
+      ];
+
+      this._router[route.method](route.path, handlers);
+      this.logger.info(`Route registered: ${route.method.toUpperCase()} ${route.path}`);
+    });
   }
 
   public send<T>(res: Response, statusCode: number, data: T): void {
