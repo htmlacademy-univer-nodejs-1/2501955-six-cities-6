@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, HttpError, HttpMethod, HttpRequest, UploadFileMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, HttpError, HttpMethod, HttpRequest, UploadFileMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { ILogger } from '../../libs/logger/index.js';
 import { IUserService } from './interfaces/user-service.interface.js';
@@ -42,7 +42,8 @@ export class UserController extends BaseController {
         handler: this.uploadAvatar,
         middlewares: [
           new ValidateObjectIdMiddleware('userId'),
-          new UploadFileMiddleware(this._config.get('UPLOAD_DIRECTORY'), 'avatar')
+          new UploadFileMiddleware(this._config.get('UPLOAD_DIRECTORY'), 'avatar'),
+          new DocumentExistsMiddleware(this._userService, 'User', 'userId')
         ]
       }
     ]);

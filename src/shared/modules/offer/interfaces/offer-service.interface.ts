@@ -14,5 +14,4 @@ export interface IOfferService extends IDocumentExists {
   findFavorite(): Promise<Array<DocumentType<OfferEntity>>>;
   addToFavorite(offerId: string): Promise<void>;
   removeFromFavorite(offerId: string): Promise<void>;
-  exists(documentId: string): Promise<boolean>;
 }
