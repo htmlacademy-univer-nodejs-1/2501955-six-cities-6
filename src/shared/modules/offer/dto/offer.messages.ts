@@ -1,11 +1,11 @@
-export const CreateOfferValidationMessage = {
+export const OfferValidationMessage = {
   title: {
-    minLength: 'Minimum title length must be 10',
-    maxLength: 'Maximum title length must be 100'
+    invalid: 'title must be a string',
+    length: 'title length must be from 10 to 100'
   },
   description: {
-    minLength: 'Minimum description length must be 20',
-    maxLength: 'Maximum description length must be 1024'
+    invalid: 'description must be a string',
+    length: 'description length must be from 20 to 1024'
   },
   city: {
     invalid: 'city must be Paris | Cologne | Brussels | Amsterdam | Hamburg | Dusseldorf'
