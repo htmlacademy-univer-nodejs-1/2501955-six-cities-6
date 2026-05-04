@@ -75,6 +75,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/offer"
+        "400":
+          $ref: "#/components/responses/invalidIdError"
         "404":
           $ref: "#/components/responses/notFoundError"
     patch:
@@ -185,7 +187,9 @@ paths:
         - $ref: "#/components/parameters/offerId"
       responses:
         "201":
-          description: Предложение добавлено в избранные
+          description: Предложение добавлено в избранные,
+        "400":
+          $ref: "#/components/responses/invalidIdError"
         "401":
           $ref: "#/components/responses/unauthorizedError"
         '404':
@@ -202,6 +206,8 @@ paths:
       responses:
         "204":
           description: Предложение удалено из избранных
+        "400":
+          $ref: "#/components/responses/invalidIdError"
         "401":
           $ref: "#/components/responses/unauthorizedError"
         "404":
@@ -225,6 +231,8 @@ paths:
                 maxItems: 50
                 items:
                   $ref: "#/components/schemas/comment"
+        "400":
+          $ref: "#/components/responses/invalidIdError"
         "404":
           $ref: "#/components/responses/notFoundError"
     post:
@@ -356,6 +364,8 @@ components:
       description: Ошибка авторизации
     notFoundError:
       description: Ошибка, элемент не найден
+    invalidIdError:
+      description: Ошибка, неверный формат id
 
   schemas:
     offerPreview:

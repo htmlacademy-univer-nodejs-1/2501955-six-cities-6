@@ -102,7 +102,7 @@ export class UserController extends BaseController {
       );
     }
 
-    this.ok(res, fillDTO(LoggerUserRdo, foundedUser));
+    this.ok(res, fillDTO(UserRdo, foundedUser));
   }
 
   public async uploadAvatar(req: Request, res: Response): Promise<void> {
