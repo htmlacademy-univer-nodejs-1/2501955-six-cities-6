@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, DocumentExistsMiddleware, HttpError, HttpMethod, HttpRequest, UploadFileMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, HttpError, HttpMethod, HttpRequest, PrivateRouteMiddleware, UploadFileMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { ILogger } from '../../libs/logger/index.js';
 import { IUserService } from './interfaces/user-service.interface.js';
@@ -37,7 +37,14 @@ export class UserController extends BaseController {
         handler: this.login,
         middlewares: [new ValidateDtoMiddleware(LoginUserDto)]
       },
-      { path: '/auth/status', method: HttpMethod.Get, handler: this.getStatus },
+      {
+        path: '/auth/status',
+        method: HttpMethod.Get,
+        handler: this.getStatus,
+        middlewares: [
+          new PrivateRouteMiddleware()
+        ]
+      },
       {
         path: '/:userId/avatar',
         method: HttpMethod.Post,
@@ -80,14 +87,22 @@ export class UserController extends BaseController {
   }
 
   public async getStatus(
-    _req: Request,
-    _res: Response
+    { tokenPayload }: Request,
+    res: Response
   ): Promise<void> {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController'
-    );
+    const foundedUser = tokenPayload?.id
+      ? await this._userService.findById(tokenPayload.id)
+      : null;
+
+    if (!foundedUser) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        'Unauthorized',
+        'UserController'
+      );
+    }
+
+    this.ok(res, fillDTO(LoggerUserRdo, foundedUser));
   }
 
   public async uploadAvatar(req: Request, res: Response): Promise<void> {

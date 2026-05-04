@@ -26,6 +26,14 @@ Content-Type: application/json
 
 ###
 
+## Получить статус авторизации пользователя
+
+GET http://localhost:5000/users/auth/status HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY5ZTNhYzVkMjBjNzM1MWU5ZThiMzk4MCIsIm5hbWUiOiJKb2huIiwidHlwZSI6ImRlZmF1bHQiLCJpYXQiOjE3Nzc5MDY5MTAsImV4cCI6MTc3ODA3OTcxMH0.cl4hLgpu_K0UNCMVT0Zrc_1I-vKpcsOK8faq3sF9C-8
+Content-Type: application/json
+
+###
+
 ## Загрузить изображение аватара
 POST http://localhost:5000/users/69baa78682093da034c576d2/avatar HTTP/1.1
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
