@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, DocumentExistsMiddleware, HttpError, HttpMethod, HttpRequest, RequestQuery, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, HttpError, HttpMethod, HttpRequest, PrivateRouteMiddleware, RequestQuery, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { ILogger } from '../../libs/logger/index.js';
 import { IOfferService } from './interfaces/offer-service.interface.js';
@@ -94,6 +94,7 @@ export class OfferController extends BaseController {
         method: HttpMethod.Post,
         handler: this.createComment,
         middlewares: [
+          new PrivateRouteMiddleware(),
           new ValidateObjectIdMiddleware('offerId'),
           new ValidateDtoMiddleware(CreateCommentDto),
           new DocumentExistsMiddleware(this._offerService, 'Offer', 'offerId')
@@ -221,13 +222,13 @@ export class OfferController extends BaseController {
   }
 
   public async createComment(
-    { body, params }: Request<OfferIdRequestParam, unknown, CreateCommentDto>,
+    { body, params, tokenPayload }: Request<OfferIdRequestParam, unknown, CreateCommentDto>,
     res: Response
   ): Promise<void> {
     const offerId = Array.isArray(params.offerId)
       ? params.offerId[0]
       : params.offerId;
-    const comment = await this._commentService.create(offerId, body);
+    const comment = await this._commentService.create(offerId, { ...body, authorId: tokenPayload.id });
     this.created(res, fillDTO(CommentRdo, comment));
   }
 }

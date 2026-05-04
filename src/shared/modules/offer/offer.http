@@ -89,12 +89,12 @@ Content-Type: application/json
 
 ## Добавить новый комментарий к предложению
 POST  http://localhost:5000/offers/69e391e24613cc52c5a3d205/comments HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY5ZTNhYzVkMjBjNzM1MWU5ZThiMzk4MCIsIm5hbWUiOiJKb2huIiwidHlwZSI6ImRlZmF1bHQiLCJpYXQiOjE3Nzc5MDY5MTAsImV4cCI6MTc3ODA3OTcxMH0.cl4hLgpu_K0UNCMVT0Zrc_1I-vKpcsOK8faq3sF9C-8
 Content-Type: application/json
 
 {
   "text": "New comment text",
-  "rating": 4.7,
-  "authorId": "69baa78682093da034c576d2"
+  "rating": 4.7
 }
 
 ###

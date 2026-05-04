@@ -36,7 +36,7 @@ export class ParseTokenMiddleware implements IMiddleware {
       return next(new HttpError(
         StatusCodes.UNAUTHORIZED,
         'Invalid token',
-        'AuthenticateMiddleware'
+        'ParseTokenMiddleware'
       ));
     }
   }

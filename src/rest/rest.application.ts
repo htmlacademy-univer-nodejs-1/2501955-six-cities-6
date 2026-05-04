@@ -5,7 +5,7 @@ import { Component } from '../shared/types/index.js';
 import { IDatabaseClient } from '../shared/libs/database-client/index.js';
 import { getMongoURI } from '../shared/helpers/database.helper.js';
 import express, { Express } from 'express';
-import { IController, IExceptionFilter } from '../shared/libs/rest/index.js';
+import { IController, IExceptionFilter, ParseTokenMiddleware } from '../shared/libs/rest/index.js';
 
 @injectable()
 export class RestApplication {
@@ -60,11 +60,14 @@ export class RestApplication {
   }
 
   private async initMiddleware(): Promise<void> {
+    const authenticateMiddleware = new ParseTokenMiddleware(this._config.get('JWT_SECRET'));
+
     this._server.use(express.json());
     this._server.use(
       '/upload',
       express.static(this._config.get('UPLOAD_DIRECTORY'))
     );
+    this._server.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
   }
 
   private async initControllers(): Promise<void> {
