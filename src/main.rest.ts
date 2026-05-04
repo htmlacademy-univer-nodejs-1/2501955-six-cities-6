@@ -6,6 +6,7 @@ import { createUserContainer } from './shared/modules/user/index.js';
 import { createOfferContainer } from './shared/modules/offer/index.js';
 import { createCommentContainer } from './shared/modules/comment/index.js';
 import { createAuthContainer } from './shared/modules/auth/index.js';
+import { createFavoriteContainer } from './shared/modules/favorite/index.js';
 
 async function bootstrap(): Promise<void> {
   const appContainer = new Container();
@@ -13,6 +14,7 @@ async function bootstrap(): Promise<void> {
     createRestApplicationContainer(),
     createUserContainer(),
     createOfferContainer(),
+    createFavoriteContainer(),
     createCommentContainer(),
     createAuthContainer()
   );

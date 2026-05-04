@@ -34,9 +34,6 @@ export class CreateOfferDto {
   @IsBoolean({ message: OfferValidationMessage.isPremium.invalid })
   public isPremium!: boolean;
 
-  @IsBoolean({ message: OfferValidationMessage.isFavorite.invalid })
-  public isFavorite!: boolean;
-
   @IsEnum(HousingType, { message: OfferValidationMessage.housingType.invalid })
   public housingType!: HousingType;
 

@@ -497,9 +497,6 @@ components:
         isPremium:
           type: boolean
           example: false
-        isFavorite:
-          type: boolean
-          example: false
         housingType:
           $ref: "#/components/schemas/housingType"
         roomsCount:

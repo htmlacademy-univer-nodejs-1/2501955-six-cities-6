@@ -118,10 +118,10 @@ export class OfferController extends BaseController {
   }
 
   public async index(
-    { query }: Request<unknown, unknown, unknown, RequestQuery>,
+    { query, tokenPayload }: Request<unknown, unknown, unknown, RequestQuery>,
     res: Response
   ): Promise<void> {
-    const offers = await this._offerService.find(query.limit);
+    const offers = await this._offerService.find(query.limit, tokenPayload?.id);
     this.ok(res, fillDTO(OfferPreviewRdo, offers));
   }
 
@@ -134,13 +134,13 @@ export class OfferController extends BaseController {
   }
 
   public async show(
-    { params }: Request<OfferIdRequestParam>,
+    { params, tokenPayload }: Request<OfferIdRequestParam>,
     res: Response
   ): Promise<void> {
     const offerId = Array.isArray(params.offerId)
       ? params.offerId[0]
       : params.offerId;
-    const offer = await this._offerService.findById(offerId);
+    const offer = await this._offerService.findById(offerId, tokenPayload?.id);
     this.ok(res, fillDTO(OfferRdo, offer));
   }
 
@@ -168,7 +168,7 @@ export class OfferController extends BaseController {
   }
 
   public async indexPremium(
-    { params }: Request<CityRequestParam>,
+    { params, tokenPayload }: Request<CityRequestParam>,
     res: Response
   ): Promise<void> {
     const validCities = [
@@ -182,7 +182,7 @@ export class OfferController extends BaseController {
     const city = Array.isArray(params.city)
       ? params.city[0]
       : params.city;
-    if (!(city in validCities)) {
+    if (!validCities.includes(city)) {
       throw new HttpError(
         StatusCodes.BAD_REQUEST,
         'City must be in Paris | Cologne | Brussels | Amsterdam | Hamburg | Dusseldorf',
@@ -190,37 +190,37 @@ export class OfferController extends BaseController {
       );
     }
 
-    const premiumOffers = await this._offerService.findPremium(city);
+    const premiumOffers = await this._offerService.findPremium(city, tokenPayload?.id);
     this.ok(res, fillDTO(OfferPreviewRdo, premiumOffers));
   }
 
   public async indexFavorite(
-    _req: Request,
+    { tokenPayload }: Request,
     res: Response
   ): Promise<void> {
-    const favoriteOffers = await this._offerService.findFavorite();
+    const favoriteOffers = await this._offerService.findFavorite(tokenPayload.id);
     this.ok(res, fillDTO(OfferPreviewRdo, favoriteOffers));
   }
 
   public async makeFavorite(
-    { params }: Request<OfferIdRequestParam>,
+    { params, tokenPayload }: Request<OfferIdRequestParam>,
     res: Response
   ): Promise<void> {
     const offerId = Array.isArray(params.offerId)
       ? params.offerId[0]
       : params.offerId;
-    await this._offerService.addToFavorite(offerId);
+    await this._offerService.addToFavorite(offerId, tokenPayload.id);
     this.created(res, void 0);
   }
 
   public async removeFavorite(
-    { params }: Request<OfferIdRequestParam>,
+    { params, tokenPayload }: Request<OfferIdRequestParam>,
     res: Response
   ): Promise<void> {
     const offerId = Array.isArray(params.offerId)
       ? params.offerId[0]
       : params.offerId;
-    await this._offerService.removeFromFavorite(offerId);
+    await this._offerService.removeFromFavorite(offerId, tokenPayload.id);
     this.noContent(res, void 0);
   }
 

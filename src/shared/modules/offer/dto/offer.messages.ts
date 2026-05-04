@@ -21,9 +21,6 @@ export const OfferValidationMessage = {
   isPremium: {
     invalid: 'isPremium must be a boolean type'
   },
-  isFavorite: {
-    invalid: 'isFavorite must be a boolean type'
-  },
   housingType: {
     invalid: 'housingType must be apartment | house | room | hotel'
   },
