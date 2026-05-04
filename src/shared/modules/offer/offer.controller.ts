@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, DocumentExistsMiddleware, HttpError, HttpMethod, HttpRequest, PrivateRouteMiddleware, RequestQuery, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, DocumentOwnerMiddleware, HttpError, HttpMethod, HttpRequest, PrivateRouteMiddleware, RequestQuery, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { ILogger } from '../../libs/logger/index.js';
 import { IOfferService } from './interfaces/offer-service.interface.js';
@@ -61,7 +61,8 @@ export class OfferController extends BaseController {
           new PrivateRouteMiddleware(),
           new ValidateObjectIdMiddleware('offerId'),
           new ValidateDtoMiddleware(UpdateOfferDto),
-          new DocumentExistsMiddleware(this._offerService, 'Offer', 'offerId')
+          new DocumentExistsMiddleware(this._offerService, 'Offer', 'offerId'),
+          new DocumentOwnerMiddleware(this._offerService, 'Offer', 'offerId')
         ]
       },
       {
@@ -71,7 +72,8 @@ export class OfferController extends BaseController {
         middlewares: [
           new PrivateRouteMiddleware(),
           new ValidateObjectIdMiddleware('offerId'),
-          new DocumentExistsMiddleware(this._offerService, 'Offer', 'offerId')
+          new DocumentExistsMiddleware(this._offerService, 'Offer', 'offerId'),
+          new DocumentOwnerMiddleware(this._offerService, 'Offer', 'offerId')
         ]
       },
       {

@@ -114,4 +114,13 @@ export class DefaultOfferService implements IOfferService {
       .deleteOne({ userId, offerId })
       .exec();
   }
+
+  public async getOwnerId(documentId: string): Promise<string | null> {
+    const offer = await this._offerModel
+      .findById(documentId)
+      .select('authorId')
+      .exec();
+
+    return offer ? offer.authorId.toString() : null;
+  }
 }
