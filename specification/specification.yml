@@ -312,24 +312,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/authToken"
-        "400":
-          description: Неверный формат email или пароля
         "401":
           description: Неверный email или пароль
-
-  /users/auth/logout:
-    post:
-      tags:
-        - users
-      summary: Разоавторизация
-      description: Выполняет выход пользователя
-      security:
-        - bearerAuth: []
-      responses:
-        "204":
-          description: Выход успешно выполнен
-        "401":
-          $ref: "#/components/responses/unauthorizedError"
+        "404":
+          description: Пользователь не найден
 
   /users/auth/status:
     get:

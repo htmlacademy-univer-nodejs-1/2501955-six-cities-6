@@ -34,7 +34,6 @@ export class UserController extends BaseController {
         handler: this.login,
         middlewares: [new ValidateDtoMiddleware(LoginUserDto)]
       },
-      { path: '/auth/logout', method: HttpMethod.Post, handler: this.logout },
       { path: '/auth/status', method: HttpMethod.Get, handler: this.getStatus },
       {
         path: '/:userId/avatar',
@@ -88,17 +87,6 @@ export class UserController extends BaseController {
       );
     }
 
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController'
-    );
-  }
-
-  public async logout(
-    _req: Request,
-    _res: Response
-  ): Promise<void> {
     throw new HttpError(
       StatusCodes.NOT_IMPLEMENTED,
       'Not implemented',
