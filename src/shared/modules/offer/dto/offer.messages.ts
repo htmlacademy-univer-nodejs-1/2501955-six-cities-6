@@ -45,8 +45,5 @@ export const OfferValidationMessage = {
   amenities: {
     isArray: 'amenities must be an array',
     invalid: 'amenities items must be Breakfast | Air conditioning | Laptop friendly workspace | Baby seat | Washer | Towels | Fridge'
-  },
-  authorId: {
-    invalid: 'authorId must be a valid ObjectID'
   }
 };

@@ -30,9 +30,19 @@ export class OfferController extends BaseController {
         path: '/',
         method: HttpMethod.Post,
         handler: this.create,
-        middlewares: [new ValidateDtoMiddleware(CreateOfferDto)]
+        middlewares: [
+          new PrivateRouteMiddleware(),
+          new ValidateDtoMiddleware(CreateOfferDto)
+        ]
       },
-      { path: '/favorite', method: HttpMethod.Get, handler: this.indexFavorite },
+      {
+        path: '/favorite',
+        method: HttpMethod.Get,
+        handler: this.indexFavorite,
+        middlewares: [
+          new PrivateRouteMiddleware()
+        ]
+      },
       { path: '/premium/:city', method: HttpMethod.Get, handler: this.indexPremium },
       {
         path: '/:offerId',
@@ -48,6 +58,7 @@ export class OfferController extends BaseController {
         method: HttpMethod.Patch,
         handler: this.update,
         middlewares: [
+          new PrivateRouteMiddleware(),
           new ValidateObjectIdMiddleware('offerId'),
           new ValidateDtoMiddleware(UpdateOfferDto),
           new DocumentExistsMiddleware(this._offerService, 'Offer', 'offerId')
@@ -58,6 +69,7 @@ export class OfferController extends BaseController {
         method: HttpMethod.Delete,
         handler: this.delete,
         middlewares: [
+          new PrivateRouteMiddleware(),
           new ValidateObjectIdMiddleware('offerId'),
           new DocumentExistsMiddleware(this._offerService, 'Offer', 'offerId')
         ]
@@ -67,6 +79,7 @@ export class OfferController extends BaseController {
         method: HttpMethod.Post,
         handler: this.makeFavorite,
         middlewares: [
+          new PrivateRouteMiddleware(),
           new ValidateObjectIdMiddleware('offerId'),
           new DocumentExistsMiddleware(this._offerService, 'Offer', 'offerId')
         ]
@@ -76,6 +89,7 @@ export class OfferController extends BaseController {
         method: HttpMethod.Delete,
         handler: this.removeFavorite,
         middlewares: [
+          new PrivateRouteMiddleware(),
           new ValidateObjectIdMiddleware('offerId'),
           new DocumentExistsMiddleware(this._offerService, 'Offer', 'offerId')
         ]
@@ -112,10 +126,10 @@ export class OfferController extends BaseController {
   }
 
   public async create(
-    { body }: HttpRequest<CreateOfferDto>,
+    { body, tokenPayload }: HttpRequest<CreateOfferDto>,
     res: Response
   ): Promise<void> {
-    const offer = await this._offerService.create(body);
+    const offer = await this._offerService.create({ ...body, authorId: tokenPayload.id });
     this.created(res, fillDTO(OfferRdo, offer));
   }
 
@@ -131,13 +145,13 @@ export class OfferController extends BaseController {
   }
 
   public async update(
-    { body, params }: Request<OfferIdRequestParam, unknown, UpdateOfferDto>,
+    { body, params, tokenPayload }: Request<OfferIdRequestParam, unknown, UpdateOfferDto>,
     res: Response
   ): Promise<void> {
     const offerId = Array.isArray(params.offerId)
       ? params.offerId[0]
       : params.offerId;
-    const updatedOffer = await this._offerService.updateById(offerId, body);
+    const updatedOffer = await this._offerService.updateById(offerId, { ...body, authorId: tokenPayload.id });
     this.ok(res, fillDTO(OfferRdo, updatedOffer));
   }
 
