@@ -23,7 +23,6 @@ export class DefaultAuthService implements IAuthService {
     const secretKey = createSecretKey(jwtSecret, 'utf-8');
     const tokenPayload: TokenPayload = {
       id: user.id,
-      email: user.email,
       name: user.name,
       type: user.type
     };

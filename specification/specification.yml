@@ -311,7 +311,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/authToken"
+                $ref: "#/components/schemas/loggedUser"
         "401":
           description: Неверный email или пароль
         "404":
@@ -550,6 +550,16 @@ components:
             - pro
           example: default
 
+    loggedUser:
+      type: object
+      description: Объект с токеном и email пользователя после авторизации
+      properties:
+        token:
+          type: string
+        email:
+          type: string
+          example: email@email.com
+
     createUser:
       type: object
       description: DTO для создания пользователя
@@ -669,10 +679,3 @@ components:
           minimum: -180
           maximum: 180
           example: 60.3582
-
-    authToken:
-      type: object
-      description: Токен авторизации
-      properties:
-        token:
-          type: string

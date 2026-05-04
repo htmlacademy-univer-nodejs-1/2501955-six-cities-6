@@ -10,13 +10,16 @@ import { fillDTO } from '../../helpers/common.helper.js';
 import { UserRdo } from './rdo/user.rdo.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
 import { LoginUserDto } from './dto/login-user.dto.js';
+import { IAuthService } from '../auth/index.js';
+import { LoggerUserRdo } from './rdo/logged-user.rdo.js';
 
 @injectable()
 export class UserController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: ILogger,
     @inject(Component.UserService) private readonly _userService: IUserService,
-    @inject(Component.Config) private readonly _config: IConfig<RestSchema>
+    @inject(Component.AuthService) private readonly _authService: IAuthService,
+    @inject(Component.Config) private readonly _config: IConfig<RestSchema>,
   ) {
     super(logger);
 
@@ -68,30 +71,12 @@ export class UserController extends BaseController {
 
   public async login(
     { body }: HttpRequest<LoginUserDto>,
-    _res: Response
+    res: Response
   ): Promise<void> {
-    const existsUser = await this._userService.findByEmail(body.email);
+    const user = await this._authService.verify(body);
+    const token = await this._authService.authenticate(user);
 
-    if (!existsUser) {
-      throw new HttpError(
-        StatusCodes.UNAUTHORIZED,
-        `User with email ${body.email} not found`,
-        'UserController'
-      );
-    }
-    if (!(existsUser.getPassword() === body.password)) {
-      throw new HttpError(
-        StatusCodes.UNAUTHORIZED,
-        'Invalid password',
-        'UserController'
-      );
-    }
-
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController'
-    );
+    return this.ok(res, fillDTO(LoggerUserRdo, { email: user.email, token }));
   }
 
   public async getStatus(
