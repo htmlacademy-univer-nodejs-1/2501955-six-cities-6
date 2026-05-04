@@ -17,7 +17,8 @@ export class RestApplication {
     @inject(Component.DatabaseClient) private readonly _databaseClient: IDatabaseClient,
     @inject(Component.UserController) private readonly _userController: IController,
     @inject(Component.OfferController) private readonly _offerController: IController,
-    @inject(Component.ExceptionFilter) private readonly _appExceptionFilter: IExceptionFilter
+    @inject(Component.ExceptionFilter) private readonly _appExceptionFilter: IExceptionFilter,
+    @inject(Component.AuthExceptionFilter) private readonly _authExceptionFilter: IExceptionFilter
   ) {
     this._server = express();
   }
@@ -72,6 +73,7 @@ export class RestApplication {
   }
 
   private async initExceptionFilters(): Promise<void> {
+    this._server.use(this._authExceptionFilter.catch.bind(this._authExceptionFilter));
     this._server.use(this._appExceptionFilter.catch.bind(this._appExceptionFilter));
   }
 
