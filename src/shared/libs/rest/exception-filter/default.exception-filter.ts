@@ -12,7 +12,7 @@ export class DefaultExceptionFilter implements IExceptionFilter {
   constructor(
     @inject(Component.Logger) private readonly _logger: ILogger
   ) {
-    this._logger.info('Register DefaultExceptionFilter');
+    this._logger.info('DefaultExceptionFilter registered');
   }
 
   public catch(

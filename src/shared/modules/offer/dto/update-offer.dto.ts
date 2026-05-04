@@ -1,4 +1,4 @@
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsEnum, IsIn, IsInt, IsMongoId, IsOptional, IsString, IsUrl, Length, Max, Min } from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsEnum, IsIn, IsInt, IsOptional, IsString, IsUrl, Length, Max, Min } from 'class-validator';
 import { AmenityType, Coordinates, HousingType } from '../../../types/index.js';
 import { IsCoordinates } from '../../../libs/rest/index.js';
 import { OfferValidationMessage } from './offer.messages.js';
@@ -41,10 +41,6 @@ export class UpdateOfferDto {
   public isPremium?: boolean;
 
   @IsOptional()
-  @IsBoolean({ message: OfferValidationMessage.isFavorite.invalid })
-  public isFavorite?: boolean;
-
-  @IsOptional()
   @IsEnum(HousingType, { message: OfferValidationMessage.housingType.invalid })
   public housingType?: HousingType;
 
@@ -71,10 +67,9 @@ export class UpdateOfferDto {
   @IsEnum(AmenityType, { each: true, message: OfferValidationMessage.amenities.invalid })
   public amenities?: AmenityType[];
 
-  @IsMongoId({ message: OfferValidationMessage.authorId.invalid })
-  public authorId!: string;
-
   @IsOptional()
   @IsCoordinates()
   public coordinates?: Coordinates;
+
+  public authorId!: string;
 }

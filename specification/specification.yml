@@ -75,6 +75,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/offer"
+        "400":
+          $ref: "#/components/responses/invalidIdError"
         "404":
           $ref: "#/components/responses/notFoundError"
     patch:
@@ -185,7 +187,9 @@ paths:
         - $ref: "#/components/parameters/offerId"
       responses:
         "201":
-          description: Предложение добавлено в избранные
+          description: Предложение добавлено в избранные,
+        "400":
+          $ref: "#/components/responses/invalidIdError"
         "401":
           $ref: "#/components/responses/unauthorizedError"
         '404':
@@ -202,6 +206,8 @@ paths:
       responses:
         "204":
           description: Предложение удалено из избранных
+        "400":
+          $ref: "#/components/responses/invalidIdError"
         "401":
           $ref: "#/components/responses/unauthorizedError"
         "404":
@@ -225,6 +231,8 @@ paths:
                 maxItems: 50
                 items:
                   $ref: "#/components/schemas/comment"
+        "400":
+          $ref: "#/components/responses/invalidIdError"
         "404":
           $ref: "#/components/responses/notFoundError"
     post:
@@ -311,25 +319,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/authToken"
-        "400":
-          description: Неверный формат email или пароля
+                $ref: "#/components/schemas/loggedUser"
         "401":
           description: Неверный email или пароль
-
-  /users/auth/logout:
-    post:
-      tags:
-        - users
-      summary: Разоавторизация
-      description: Выполняет выход пользователя
-      security:
-        - bearerAuth: []
-      responses:
-        "204":
-          description: Выход успешно выполнен
-        "401":
-          $ref: "#/components/responses/unauthorizedError"
+        "404":
+          description: Пользователь не найден
 
   /users/auth/status:
     get:
@@ -370,6 +364,8 @@ components:
       description: Ошибка авторизации
     notFoundError:
       description: Ошибка, элемент не найден
+    invalidIdError:
+      description: Ошибка, неверный формат id
 
   schemas:
     offerPreview:
@@ -511,9 +507,6 @@ components:
         isPremium:
           type: boolean
           example: false
-        isFavorite:
-          type: boolean
-          example: false
         housingType:
           $ref: "#/components/schemas/housingType"
         roomsCount:
@@ -563,6 +556,16 @@ components:
             - default
             - pro
           example: default
+
+    loggedUser:
+      type: object
+      description: Объект с токеном и email пользователя после авторизации
+      properties:
+        token:
+          type: string
+        email:
+          type: string
+          example: email@email.com
 
     createUser:
       type: object
@@ -683,10 +686,3 @@ components:
           minimum: -180
           maximum: 180
           example: 60.3582
-
-    authToken:
-      type: object
-      description: Токен авторизации
-      properties:
-        token:
-          type: string

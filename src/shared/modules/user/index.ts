@@ -6,4 +6,4 @@ export * from './services/default-user.service.js';
 export * from './dto/create-user.dto.js';
 export * from './dto/user.messages.js';
 export * from './dto/login-user.dto.js';
-export * from './rdo/user.rdo.js';
+export * from './rdo/index.js';
