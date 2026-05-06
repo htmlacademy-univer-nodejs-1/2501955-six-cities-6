@@ -17,8 +17,10 @@ export class RestApplication {
     @inject(Component.DatabaseClient) private readonly _databaseClient: IDatabaseClient,
     @inject(Component.UserController) private readonly _userController: IController,
     @inject(Component.OfferController) private readonly _offerController: IController,
-    @inject(Component.ExceptionFilter) private readonly _appExceptionFilter: IExceptionFilter,
-    @inject(Component.AuthExceptionFilter) private readonly _authExceptionFilter: IExceptionFilter
+    @inject(Component.DefaultExceptionFilter) private readonly _defaultExceptionFilter: IExceptionFilter,
+    @inject(Component.AuthExceptionFilter) private readonly _authExceptionFilter: IExceptionFilter,
+    @inject(Component.ValidationExceptionFilter) private readonly _validationExceptionFilter: IExceptionFilter,
+    @inject(Component.HttpErrorExceptionFilter) private readonly _httpErrorExceptionFilter: IExceptionFilter
   ) {
     this._server = express();
   }
@@ -77,7 +79,9 @@ export class RestApplication {
 
   private async initExceptionFilters(): Promise<void> {
     this._server.use(this._authExceptionFilter.catch.bind(this._authExceptionFilter));
-    this._server.use(this._appExceptionFilter.catch.bind(this._appExceptionFilter));
+    this._server.use(this._validationExceptionFilter.catch.bind(this._validationExceptionFilter));
+    this._server.use(this._httpErrorExceptionFilter.catch.bind(this._httpErrorExceptionFilter));
+    this._server.use(this._defaultExceptionFilter.catch.bind(this._defaultExceptionFilter));
   }
 
   private async initServer(): Promise<void> {

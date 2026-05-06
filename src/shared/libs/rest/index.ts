@@ -1,4 +1,4 @@
-export * from './enums/http-method.enum.js';
+export * from './enums/index.js';
 export * from './interfaces/index.js';
 export * from './controller/index.js';
 export * from './exception-filter/index.js';
