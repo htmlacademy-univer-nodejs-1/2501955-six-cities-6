@@ -3,7 +3,7 @@ import { IConfig, RestSchema } from '../shared/libs/config/index.js';
 import { ILogger } from '../shared/libs/logger/index.js';
 import { Component } from '../shared/types/index.js';
 import { IDatabaseClient } from '../shared/libs/database-client/index.js';
-import { getMongoURI } from '../shared/helpers/database.helper.js';
+import { getMongoURI, getFullServerPath } from '../shared/helpers/index.js';
 import express, { Express } from 'express';
 import { IController, IExceptionFilter, ParseTokenMiddleware } from '../shared/libs/rest/index.js';
 
@@ -46,7 +46,11 @@ export class RestApplication {
 
     this._logger.info('Init server...');
     await this.initServer();
-    this._logger.info(`Server started on http://localhost:${this._config.get('PORT')}`);
+    this._logger.info(`Server started on ${getFullServerPath(
+      this._config.get('SERVER_HOST_PROTOCOL'),
+      this._config.get('HOST'),
+      this._config.get('PORT')
+    )}`);
   }
 
   private async initDb(): Promise<void> {
@@ -68,6 +72,10 @@ export class RestApplication {
     this._server.use(
       '/upload',
       express.static(this._config.get('UPLOAD_DIRECTORY'))
+    );
+    this._server.use(
+      '/static',
+      express.static(this._config.get('STATIC_DIRECTORY'))
     );
     this._server.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
   }
