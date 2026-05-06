@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, DocumentExistsMiddleware, HttpError, HttpMethod, HttpRequest, PrivateRouteMiddleware, UploadFileMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, HttpError, HttpMethod, HttpRequest, PathTransformer, PrivateRouteMiddleware, UploadFileMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { ILogger } from '../../libs/logger/index.js';
 import { IUserService } from './interfaces/user-service.interface.js';
@@ -17,11 +17,12 @@ import { LoggerUserRdo } from './rdo/logged-user.rdo.js';
 export class UserController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: ILogger,
+    @inject(Component.PathTransformer) protected readonly pathTransformer: PathTransformer,
     @inject(Component.UserService) private readonly _userService: IUserService,
     @inject(Component.AuthService) private readonly _authService: IAuthService,
     @inject(Component.Config) private readonly _config: IConfig<RestSchema>,
   ) {
-    super(logger);
+    super(logger, pathTransformer);
 
     this.logger.info('Registering routes for UserController...');
     this.addRoutes([

@@ -4,6 +4,7 @@ import { Response, Router } from 'express';
 import { ILogger } from '../../logger/index.js';
 import { IRoute } from '../interfaces/route.interface.js';
 import { StatusCodes } from 'http-status-codes';
+import { PathTransformer } from '../transform/index.js';
 
 const DEFAULT_CONTENT_TYPE = 'application/json';
 
@@ -11,7 +12,10 @@ const DEFAULT_CONTENT_TYPE = 'application/json';
 export abstract class BaseController implements IController {
   private readonly _router: Router;
 
-  constructor(protected readonly logger: ILogger) {
+  constructor(
+    protected readonly logger: ILogger,
+    protected readonly pathTransformer: PathTransformer
+  ) {
     this._router = Router();
   }
 
@@ -32,10 +36,11 @@ export abstract class BaseController implements IController {
   }
 
   public send<T>(res: Response, statusCode: number, data: T): void {
+    const modifiedData = this.pathTransformer.execute(data as Record<string, unknown>);
     res
       .type(DEFAULT_CONTENT_TYPE)
       .status(statusCode)
-      .json(data);
+      .json(modifiedData);
   }
 
   public ok<T>(res: Response, data: T): void {

@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, DocumentExistsMiddleware, DocumentOwnerMiddleware, HttpError, HttpMethod, HttpRequest, PrivateRouteMiddleware, RequestQuery, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, DocumentOwnerMiddleware, HttpError, HttpMethod, HttpRequest, PathTransformer, PrivateRouteMiddleware, RequestQuery, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { ILogger } from '../../libs/logger/index.js';
 import { IOfferService } from './interfaces/offer-service.interface.js';
@@ -18,10 +18,11 @@ import { StatusCodes } from 'http-status-codes';
 export class OfferController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: ILogger,
+    @inject(Component.PathTransformer) protected readonly pathTransformer: PathTransformer,
     @inject(Component.OfferService) private readonly _offerService: IOfferService,
     @inject(Component.CommentService) private readonly _commentService: ICommentService
   ) {
-    super(logger);
+    super(logger, pathTransformer);
 
     this.logger.info('Registering routes for OfferController...');
     this.addRoutes([
