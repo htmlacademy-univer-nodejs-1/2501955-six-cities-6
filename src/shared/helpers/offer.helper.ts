@@ -40,7 +40,7 @@ export function createOffer(offerData: string): Offer {
   const user: User = {
     name: authorName,
     email: authorEmail,
-    avatar: authorAvatar || undefined,
+    avatar: authorAvatar,
     type: authorType as UserType
   };
 

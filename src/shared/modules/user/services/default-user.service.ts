@@ -5,6 +5,7 @@ import { UserEntity } from '../user.entity.js';
 import { inject } from 'inversify';
 import { Component } from '../../../types/index.js';
 import { ILogger } from '../../../libs/logger/index.js';
+import { DEFAULT_AVATAR_FILE_NAME } from '../constants/user.constant.js';
 
 export class DefaultUserService implements IUserService {
   constructor(
@@ -13,7 +14,7 @@ export class DefaultUserService implements IUserService {
   ) {}
 
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
-    const user = new UserEntity(dto);
+    const user = new UserEntity({ ...dto, avatar: DEFAULT_AVATAR_FILE_NAME });
     user.setPassword(dto.password, salt);
 
     const result = await this._userModel.create(user);
