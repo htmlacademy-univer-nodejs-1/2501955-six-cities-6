@@ -21,6 +21,7 @@
   "devDependencies": {
     "@types/convict": "6.1.6",
     "@types/convict-format-with-validator": "6.0.6",
+    "@types/cors": "2.8.19",
     "@types/express": "5.0.6",
     "@types/got": "9.6.12",
     "@types/mime-types": "3.0.1",
@@ -52,6 +53,7 @@
     "class-validator": "0.15.1",
     "convict": "6.2.5",
     "convict-format-with-validator": "6.2.0",
+    "cors": "2.8.6",
     "dayjs": "1.11.19",
     "dotenv": "17.3.1",
     "express": "5.2.1",

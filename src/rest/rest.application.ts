@@ -1,10 +1,11 @@
 import { inject, injectable } from 'inversify';
+import express, { Express } from 'express';
+import cors from 'cors';
 import { IConfig, RestSchema } from '../shared/libs/config/index.js';
 import { ILogger } from '../shared/libs/logger/index.js';
 import { Component } from '../shared/types/index.js';
 import { IDatabaseClient } from '../shared/libs/database-client/index.js';
 import { getMongoURI, getFullServerPath } from '../shared/helpers/index.js';
-import express, { Express } from 'express';
 import { IController, IExceptionFilter, ParseTokenMiddleware } from '../shared/libs/rest/index.js';
 import { STATIC_FILES_ROUTE, STATIC_UPLOAD_ROUTE } from './rest.constant.js';
 
@@ -79,6 +80,7 @@ export class RestApplication {
       express.static(this._config.get('STATIC_DIRECTORY'))
     );
     this._server.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
+    this._server.use(cors());
   }
 
   private async initControllers(): Promise<void> {
