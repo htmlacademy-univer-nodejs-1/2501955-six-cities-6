@@ -7,11 +7,9 @@ import { IUserService } from './interfaces/user-service.interface.js';
 import { StatusCodes } from 'http-status-codes';
 import { IConfig, RestSchema } from '../../libs/config/index.js';
 import { fillDTO } from '../../helpers/common.helper.js';
-import { UserRdo } from './rdo/user.rdo.js';
-import { CreateUserDto } from './dto/create-user.dto.js';
-import { LoginUserDto } from './dto/login-user.dto.js';
+import { UserRdo, LoggerUserRdo } from './rdo/index.js';
+import { CreateUserDto, LoginUserDto } from './dto/index.js';
 import { IAuthService } from '../auth/index.js';
-import { LoggerUserRdo } from './rdo/logged-user.rdo.js';
 
 @injectable()
 export class UserController extends BaseController {
