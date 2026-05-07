@@ -18,9 +18,6 @@ const MAX_GUESTS_COUNT = 10;
 const MIN_PRICE = 100;
 const MAX_PRICE = 100_000;
 
-const MIN_COMMENTS_COUNT = 0;
-const MAX_COMMENTS_COUNT = 100;
-
 export class TSVOfferGenerator implements IOfferGenerator {
   constructor(private readonly _mockData: MockServerData) {}
 
@@ -34,7 +31,6 @@ export class TSVOfferGenerator implements IOfferGenerator {
     const previewImage = getRandomItem(this._mockData.previewImages);
     const housingImages = getRandomItems(this._mockData.housingImages, 6).join(';');
     const isPremium = String(generateRandomValue(0, 1) === 1);
-    const isFavorite = String(generateRandomValue(0, 1) === 1);
     const rating = generateRandomValue(MIN_RATING, MAX_RATING, 1).toString();
     const housingType = getRandomItem<string>(Object.values(HousingType));
     const roomsCount = generateRandomValue(MIN_ROOMS_COUNT, MAX_ROOMS_COUNT).toString();
@@ -43,9 +39,7 @@ export class TSVOfferGenerator implements IOfferGenerator {
     const amenities = getRandomItems<string>(Object.values(AmenityType)).join(';');
     const authorName = getRandomItem(this._mockData.authorNames);
     const authorEmail = getRandomItem(this._mockData.authorEmails);
-    const authorAvatar = getRandomItem(this._mockData.authorAvatars);
     const authorType = getRandomItem<string>(Object.values(UserType));
-    const commentsCount = generateRandomValue(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT).toString();
     const coordinates = getRandomItem(this._mockData.coordinatesValues).join(';');
 
     return [
@@ -56,7 +50,6 @@ export class TSVOfferGenerator implements IOfferGenerator {
       previewImage,
       housingImages,
       isPremium,
-      isFavorite,
       rating,
       housingType,
       roomsCount,
@@ -65,9 +58,7 @@ export class TSVOfferGenerator implements IOfferGenerator {
       amenities,
       authorName,
       authorEmail,
-      authorAvatar,
       authorType,
-      commentsCount,
       coordinates
     ].join('\t');
   }
