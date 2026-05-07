@@ -1,4 +1,4 @@
-import { createOffer, getMongoURI } from '../../shared/helpers/index.js';
+import { createOffer, getMongoURI, requireEnv } from '../../shared/helpers/index.js';
 import { IDatabaseClient, MongoDatabaseClient } from '../../shared/libs/database-client/index.js';
 import { FileReaderEventType, TSVFileReader } from '../../shared/libs/file-reader/index.js';
 import { ConsoleLogger, ILogger } from '../../shared/libs/logger/index.js';
@@ -6,7 +6,7 @@ import { FavoriteModel } from '../../shared/modules/favorite/favorite.entity.js'
 import { DefaultOfferService, IOfferService, OfferModel } from '../../shared/modules/offer/index.js';
 import { DefaultUserService, IUserService, UserModel } from '../../shared/modules/user/index.js';
 import { Offer } from '../../shared/types/index.js';
-import { DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD } from './constants/command.constant.js';
+import { DEFAULT_USER_PASSWORD } from './constants/command.constant.js';
 import { CommandName } from './enums/command-name.enum.js';
 import { ICommand } from './interfaces/command.interface.js';
 
@@ -31,16 +31,15 @@ export class ImportCommand implements ICommand {
     return CommandName.Import;
   }
 
-  public async execute(
-    fileName: string,
-    login: string,
-    password: string,
-    host: string,
-    dbName: string,
-    salt: string
-  ): Promise<void> {
-    const uri = getMongoURI(login, password, host, DEFAULT_DB_PORT, dbName);
-    this._salt = salt;
+  public async execute(fileName: string): Promise<void> {
+    const uri = getMongoURI(
+      requireEnv('DB_USER'),
+      requireEnv('DB_PASSWORD'),
+      requireEnv('DB_HOST'),
+      requireEnv('DB_PORT'),
+      requireEnv('DB_NAME')
+    );
+    this._salt = requireEnv('SALT');
 
     await this._databaseClient.connect(uri);
 

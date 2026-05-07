@@ -50,3 +50,13 @@ export function reduceValidationErrors(errors: ValidationError[]): ValidationErr
 export function getFullServerPath(protocol: 'http' | 'https', host: string, port: number): string {
   return `${protocol}://${host}:${port}`;
 }
+
+export function requireEnv(name: string): string {
+  const value = process.env[name]?.trim();
+
+  if (!value) {
+    throw new Error(`Environment variable ${name} is required and cannot be empty`);
+  }
+
+  return value;
+}
