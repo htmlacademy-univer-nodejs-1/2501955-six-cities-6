@@ -6,6 +6,7 @@ import { inject } from 'inversify';
 import { Component } from '../../../types/index.js';
 import { ILogger } from '../../../libs/logger/index.js';
 import { DEFAULT_AVATAR_FILE_NAME } from '../constants/user.constant.js';
+import { UpdateUserDto } from '../dto/update-user.dto.js';
 
 export class DefaultUserService implements IUserService {
   constructor(
@@ -32,6 +33,12 @@ export class DefaultUserService implements IUserService {
   public async findById(userId: string): Promise<DocumentType<UserEntity> | null> {
     return await this._userModel
       .findById(userId)
+      .exec();
+  }
+
+  public async updateById(userId: string, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null> {
+    return await this._userModel
+      .findByIdAndUpdate(userId, dto, { new: true })
       .exec();
   }
 

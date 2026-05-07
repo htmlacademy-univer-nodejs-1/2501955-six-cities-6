@@ -61,9 +61,9 @@ export class DefaultOfferService implements IOfferService {
   }
 
   public async updateById(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
-    await this._offerModel.findByIdAndUpdate(offerId, dto).exec();
-
-    return this.findById(offerId);
+    return await this._offerModel
+      .findByIdAndUpdate(offerId, dto, { new: true })
+      .exec();
   }
 
   public async deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null> {

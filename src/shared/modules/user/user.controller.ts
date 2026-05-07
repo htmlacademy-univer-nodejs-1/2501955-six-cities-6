@@ -106,9 +106,12 @@ export class UserController extends BaseController {
     this.ok(res, fillDTO(UserRdo, foundedUser));
   }
 
-  public async uploadAvatar(req: Request, res: Response): Promise<void> {
-    this.created(res, {
-      filePath: req.file?.path
-    });
+  public async uploadAvatar({ params, file }: Request, res: Response): Promise<void> {
+    const userId = Array.isArray(params.userId)
+      ? params.userId[0]
+      : params.userId;
+    const uploadFile = { avatar: file?.filename };
+    await this._userService.updateById(userId, uploadFile);
+    this.created(res, { filePath: uploadFile.avatar });
   }
 }
