@@ -1,13 +1,6 @@
-import dayjs from 'dayjs';
 import { generateRandomValue, getRandomItem, getRandomItems } from '../../helpers/index.js';
 import { AmenityType, HousingType, MockServerData, UserType } from '../../types/index.js';
 import { IOfferGenerator } from './interfaces/offer-generator.interface.js';
-
-const FIRST_WEEK_DAY = 1;
-const LAST_WEEK_DAY = 7;
-
-const MIN_RATING = 1;
-const MAX_RATING = 5;
 
 const MIN_ROOMS_COUNT = 1;
 const MAX_ROOMS_COUNT = 8;
@@ -24,14 +17,10 @@ export class TSVOfferGenerator implements IOfferGenerator {
   public generate(): string {
     const title = getRandomItem(this._mockData.titles);
     const description = getRandomItem(this._mockData.descriptions);
-    const publishDate = dayjs()
-      .subtract(generateRandomValue(FIRST_WEEK_DAY, LAST_WEEK_DAY), 'day')
-      .toISOString();
     const city = getRandomItem(this._mockData.cities);
     const previewImage = getRandomItem(this._mockData.previewImages);
     const housingImages = getRandomItems(this._mockData.housingImages, 6).join(';');
     const isPremium = String(generateRandomValue(0, 1) === 1);
-    const rating = generateRandomValue(MIN_RATING, MAX_RATING, 1).toString();
     const housingType = getRandomItem<string>(Object.values(HousingType));
     const roomsCount = generateRandomValue(MIN_ROOMS_COUNT, MAX_ROOMS_COUNT).toString();
     const guestsCount = generateRandomValue(MIN_GUESTS_COUNT, MAX_GUESTS_COUNT).toString();
@@ -45,12 +34,10 @@ export class TSVOfferGenerator implements IOfferGenerator {
     return [
       title,
       description,
-      publishDate,
       city,
       previewImage,
       housingImages,
       isPremium,
-      rating,
       housingType,
       roomsCount,
       guestsCount,
