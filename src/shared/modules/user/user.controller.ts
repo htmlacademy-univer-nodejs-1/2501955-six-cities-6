@@ -28,7 +28,10 @@ export class UserController extends BaseController {
         path: '/register',
         method: HttpMethod.Post,
         handler: this.create,
-        middlewares: [new ValidateDtoMiddleware(CreateUserDto)]
+        middlewares: [
+          new PrivateRouteMiddleware(true),
+          new ValidateDtoMiddleware(CreateUserDto)
+        ]
       },
       {
         path: '/auth/login',
@@ -49,6 +52,7 @@ export class UserController extends BaseController {
         method: HttpMethod.Post,
         handler: this.uploadAvatar,
         middlewares: [
+          new PrivateRouteMiddleware(true),
           new ValidateObjectIdMiddleware('userId'),
           new UploadFileMiddleware(this._config.get('UPLOAD_DIRECTORY'), 'avatar'),
           new DocumentExistsMiddleware(this._userService, 'User', 'userId')

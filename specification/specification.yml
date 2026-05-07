@@ -287,6 +287,8 @@ paths:
                 $ref: "#/components/schemas/user"
         "400":
           $ref: "#/components/responses/validationError"
+        "403":
+          description: Регистрироваться могут только неавторизованные пользователи
         "409":
           description: Пользователь с таким email уже существует
 
@@ -324,6 +326,8 @@ paths:
                     example: uploads/abc123.jpg
         "400":
           description: Некорректный файл или userId
+        "403":
+          description: Загружать аватар могут только неавторизованные пользователи при регистрации
         "404":
           description: Пользователь не найден
 
