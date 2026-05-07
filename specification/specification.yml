@@ -287,8 +287,49 @@ paths:
                 $ref: "#/components/schemas/user"
         "400":
           $ref: "#/components/responses/validationError"
+        "403":
+          description: Регистрироваться могут только неавторизованные пользователи
         "409":
           description: Пользователь с таким email уже существует
+
+  /users/{userId}/avatar:
+    post:
+      tags:
+        - users
+      summary: Загрузка аватара пользователя
+      description: Загружает изображение аватара для пользователя
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - avatar
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+                  description: Файл изображения (png, jpg, jpeg)
+      responses:
+        "201":
+          description: Аватар успешно загружен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  filePath:
+                    type: string
+                    example: uploads/abc123.jpg
+        "400":
+          description: Некорректный файл или userId
+        "403":
+          description: Загружать аватар могут только неавторизованные пользователи при регистрации
+        "404":
+          description: Пользователь не найден
 
   /users/auth/login:
     post:
@@ -352,6 +393,12 @@ components:
   parameters:
     offerId:
       name: offerId
+      in: path
+      required: true
+      schema:
+        type: string
+    userId:
+      name: userId
       in: path
       required: true
       schema:
@@ -582,8 +629,6 @@ components:
         email:
           type: string
           example: email@email.com
-        avatar:
-          type: string
         type:
           type: string
           enum:

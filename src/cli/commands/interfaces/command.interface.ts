@@ -1,4 +1,4 @@
 export interface ICommand {
   getName(): string;
-  execute(...params: string[]): void;
+  execute(...params: string[]): Promise<void> | void;
 }

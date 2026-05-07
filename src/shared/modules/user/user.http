@@ -6,10 +6,22 @@ Content-Type: application/json
 {
   "name": "John",
   "email": "email@email.com",
-  "avatar": "string",
   "type": "default",
   "password": "123456"
 }
+
+###
+
+## Загрузить изображение аватара
+POST http://localhost:5000/users/69baa78682093da034c576d2/avatar HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="avatar"; filename="screen.png"
+Content-Type: image/png
+
+< /Users/nikol/Pictures/Screenshots/screen.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ###
 
@@ -28,18 +40,5 @@ Content-Type: application/json
 GET http://localhost:5000/users/auth/status HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY5ZTNhYzVkMjBjNzM1MWU5ZThiMzk4MCIsIm5hbWUiOiJKb2huIiwidHlwZSI6ImRlZmF1bHQiLCJpYXQiOjE3Nzc5MjE3NDIsImV4cCI6MTc3ODA5NDU0Mn0.Id-rat5JsDh7vt94vfLIA9JkUv8NlqNb6TcmI9CpGkE
 Content-Type: application/json
-
-###
-
-## Загрузить изображение аватара
-POST http://localhost:5000/users/69baa78682093da034c576d2/avatar HTTP/1.1
-Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
-
-------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="avatar"; filename="screen.png"
-Content-Type: image/png
-
-< /Users/nikol/Pictures/Screenshots/screen.png
-------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ###

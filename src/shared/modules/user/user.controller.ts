@@ -1,27 +1,26 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, DocumentExistsMiddleware, HttpError, HttpMethod, HttpRequest, PrivateRouteMiddleware, UploadFileMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, HttpError, HttpMethod, HttpRequest, PathTransformer, PrivateRouteMiddleware, UploadFileMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { ILogger } from '../../libs/logger/index.js';
 import { IUserService } from './interfaces/user-service.interface.js';
 import { StatusCodes } from 'http-status-codes';
 import { IConfig, RestSchema } from '../../libs/config/index.js';
 import { fillDTO } from '../../helpers/common.helper.js';
-import { UserRdo } from './rdo/user.rdo.js';
-import { CreateUserDto } from './dto/create-user.dto.js';
-import { LoginUserDto } from './dto/login-user.dto.js';
+import { UserRdo, LoggerUserRdo } from './rdo/index.js';
+import { CreateUserDto, LoginUserDto } from './dto/index.js';
 import { IAuthService } from '../auth/index.js';
-import { LoggerUserRdo } from './rdo/logged-user.rdo.js';
 
 @injectable()
 export class UserController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: ILogger,
+    @inject(Component.PathTransformer) protected readonly pathTransformer: PathTransformer,
     @inject(Component.UserService) private readonly _userService: IUserService,
     @inject(Component.AuthService) private readonly _authService: IAuthService,
     @inject(Component.Config) private readonly _config: IConfig<RestSchema>,
   ) {
-    super(logger);
+    super(logger, pathTransformer);
 
     this.logger.info('Registering routes for UserController...');
     this.addRoutes([
@@ -29,7 +28,10 @@ export class UserController extends BaseController {
         path: '/register',
         method: HttpMethod.Post,
         handler: this.create,
-        middlewares: [new ValidateDtoMiddleware(CreateUserDto)]
+        middlewares: [
+          new PrivateRouteMiddleware(true),
+          new ValidateDtoMiddleware(CreateUserDto)
+        ]
       },
       {
         path: '/auth/login',
@@ -50,6 +52,7 @@ export class UserController extends BaseController {
         method: HttpMethod.Post,
         handler: this.uploadAvatar,
         middlewares: [
+          new PrivateRouteMiddleware(true),
           new ValidateObjectIdMiddleware('userId'),
           new UploadFileMiddleware(this._config.get('UPLOAD_DIRECTORY'), 'avatar'),
           new DocumentExistsMiddleware(this._userService, 'User', 'userId')
@@ -105,9 +108,12 @@ export class UserController extends BaseController {
     this.ok(res, fillDTO(UserRdo, foundedUser));
   }
 
-  public async uploadAvatar(req: Request, res: Response): Promise<void> {
-    this.created(res, {
-      filePath: req.file?.path
-    });
+  public async uploadAvatar({ params, file }: Request, res: Response): Promise<void> {
+    const userId = Array.isArray(params.userId)
+      ? params.userId[0]
+      : params.userId;
+    const uploadFile = { avatar: file?.filename };
+    await this._userService.updateById(userId, uploadFile);
+    this.created(res, { filePath: uploadFile.avatar });
   }
 }
