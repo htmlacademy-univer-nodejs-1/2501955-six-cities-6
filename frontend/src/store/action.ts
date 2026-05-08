@@ -118,7 +118,7 @@ export const fetchUserStatus = createAsyncThunk<UserAuth['email'], undefined, { 
     const { api } = extra;
 
     try {
-      const { data } = await api.get<User>(ApiRoute.Login);
+      const { data } = await api.get<User>(ApiRoute.UserStatus);
 
       return data.email;
     } catch (error) {
@@ -145,14 +145,10 @@ export const loginUser = createAsyncThunk<UserAuth['email'], UserAuth, { extra: 
     return email;
   });
 
-export const logoutUser = createAsyncThunk<void, undefined, { extra: Extra }>(
+export const logoutUser = createAsyncThunk(
   Action.LOGOUT_USER,
-  async (_, { extra }) => {
-    const { api } = extra;
-    await api.delete(ApiRoute.Logout);
-
-    Token.drop();
-  });
+  async () => Token.drop()
+);
 
 export const registerUser = createAsyncThunk<void, UserRegister, { extra: Extra }>(
   Action.REGISTER_USER,
@@ -167,7 +163,7 @@ export const registerUser = createAsyncThunk<void, UserRegister, { extra: Extra 
     if (avatar) {
       const payload = new FormData();
       payload.append('avatar', avatar);
-      await api.post(`/${data.id}${ApiRoute.Avatar}`, payload, {
+      await api.post(`${ApiRoute.Avatar.replace(':userId', data.id)}`, payload, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
     }

@@ -27,7 +27,7 @@ const Register = (): JSX.Element => {
     const formData = new FormData(form) as Iterable<[UserRegister]>;
     const data = Object.fromEntries(formData);
 
-    data.type = data.isPro ? UserType.Pro : UserType.Regular;
+    data.type = data.isPro ? UserType.Pro : UserType.Default;
     delete data.isPro;
     dispatch(registerUser(data));
   };
