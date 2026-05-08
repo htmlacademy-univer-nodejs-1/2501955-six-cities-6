@@ -12,6 +12,6 @@ export interface IOfferService extends IDocumentExists, IDocumentOwnerCheck {
   updateById(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null>;
   findPremium(city: string, userId?: string): Promise<Array<DocumentType<OfferEntity>>>;
   findFavorite(userId: string): Promise<Array<DocumentType<OfferEntity>>>;
-  addToFavorite(offerId: string, userId: string): Promise<void>;
-  removeFromFavorite(offerId: string, userId: string): Promise<void>;
+  addToFavorite(offerId: string, userId: string): Promise<DocumentType<OfferEntity> | null>;
+  removeFromFavorite(offerId: string, userId: string): Promise<DocumentType<OfferEntity> | null>;
 }

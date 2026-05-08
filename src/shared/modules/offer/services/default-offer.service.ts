@@ -99,7 +99,7 @@ export class DefaultOfferService implements IOfferService {
       .exec();
   }
 
-  public async addToFavorite(offerId: string, userId: string): Promise<void> {
+  public async addToFavorite(offerId: string, userId: string): Promise<DocumentType<OfferEntity> | null> {
     await this._favoriteModel
       .updateOne(
         { userId, offerId },
@@ -107,12 +107,16 @@ export class DefaultOfferService implements IOfferService {
         { upsert: true }
       )
       .exec();
+
+    return this.findById(offerId);
   }
 
-  public async removeFromFavorite(offerId: string, userId: string): Promise<void> {
+  public async removeFromFavorite(offerId: string, userId: string): Promise<DocumentType<OfferEntity> | null> {
     await this._favoriteModel
       .deleteOne({ userId, offerId })
       .exec();
+
+    return this.findById(offerId);
   }
 
   public async getOwnerId(documentId: string): Promise<string | null> {

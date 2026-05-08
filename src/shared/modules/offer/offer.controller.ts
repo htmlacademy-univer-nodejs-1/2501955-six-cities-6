@@ -212,8 +212,8 @@ export class OfferController extends BaseController {
     const offerId = Array.isArray(params.offerId)
       ? params.offerId[0]
       : params.offerId;
-    await this._offerService.addToFavorite(offerId, tokenPayload.id);
-    this.created(res, void 0);
+    const offer = await this._offerService.addToFavorite(offerId, tokenPayload.id);
+    this.created(res, fillDTO(OfferRdo, offer));
   }
 
   public async removeFavorite(
@@ -223,8 +223,8 @@ export class OfferController extends BaseController {
     const offerId = Array.isArray(params.offerId)
       ? params.offerId[0]
       : params.offerId;
-    await this._offerService.removeFromFavorite(offerId, tokenPayload.id);
-    this.noContent(res, void 0);
+    const offer = await this._offerService.removeFromFavorite(offerId, tokenPayload.id);
+    this.ok(res, fillDTO(OfferRdo, offer));
   }
 
   public async indexComments(
