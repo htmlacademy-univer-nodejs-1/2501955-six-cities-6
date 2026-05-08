@@ -4,6 +4,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { UserAuth, User, Offer, Comment, CommentAuth, FavoriteAuth, UserRegister, NewOffer } from '../types/types';
 import { ApiRoute, AppRoute, HttpCode } from '../const';
 import { Token } from '../utils';
+import { adaptCreateOfferToServer, adaptUpdateOfferToServer } from '../adaptersToServer';
 
 type Extra = {
   api: AxiosInstance;
@@ -41,7 +42,7 @@ export const fetchFavoriteOffers = createAsyncThunk<Offer[], undefined, { extra:
   Action.FETCH_FAVORITE_OFFERS,
   async (_, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<Offer[]>(ApiRoute.Favorite);
+    const { data } = await api.get<Offer[]>(`${ApiRoute.Offers}/${ApiRoute.Favorite}`);
 
     return data;
   });
@@ -70,7 +71,7 @@ export const postOffer = createAsyncThunk<Offer, NewOffer, { extra: Extra }>(
   Action.POST_OFFER,
   async (newOffer, { extra }) => {
     const { api, history } = extra;
-    const { data } = await api.post<Offer>(ApiRoute.Offers, newOffer);
+    const { data } = await api.post<Offer>(ApiRoute.Offers, adaptCreateOfferToServer(newOffer));
     history.push(`${AppRoute.Property}/${data.id}`);
 
     return data;
@@ -80,7 +81,7 @@ export const editOffer = createAsyncThunk<Offer, Offer, { extra: Extra }>(
   Action.EDIT_OFFER,
   async (offer, { extra }) => {
     const { api, history } = extra;
-    const { data } = await api.patch<Offer>(`${ApiRoute.Offers}/${offer.id}`, offer);
+    const { data } = await api.patch<Offer>(`${ApiRoute.Offers}/${offer.id}`, adaptUpdateOfferToServer(offer));
     history.push(`${AppRoute.Property}/${data.id}`);
 
     return data;
@@ -98,7 +99,7 @@ export const fetchPremiumOffers = createAsyncThunk<Offer[], string, { extra: Ext
   Action.FETCH_PREMIUM_OFFERS,
   async (cityName, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<Offer[]>(`${ApiRoute.Premium}?city=${cityName}`);
+    const { data } = await api.get<Offer[]>(ApiRoute.Premium.replace(':city', cityName));
 
     return data;
   });
@@ -163,7 +164,7 @@ export const registerUser = createAsyncThunk<void, UserRegister, { extra: Extra 
     if (avatar) {
       const payload = new FormData();
       payload.append('avatar', avatar);
-      await api.post(`${ApiRoute.Avatar.replace(':userId', data.id)}`, payload, {
+      await api.post(ApiRoute.Avatar.replace(':userId', data.id), payload, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
     }
@@ -189,7 +190,7 @@ export const postFavorite = createAsyncThunk<
 
   try {
     const { data } = await api.post<Offer>(
-      `${ApiRoute.Favorite}/${id}`
+      `${ApiRoute.Offers}/${id}/${ApiRoute.Favorite}`
     );
 
     return data;
@@ -213,7 +214,7 @@ export const deleteFavorite = createAsyncThunk<
 
   try {
     const { data } = await api.delete<Offer>(
-      `${ApiRoute.Favorite}/${id}`
+      `${ApiRoute.Offers}/${id}/${ApiRoute.Favorite}`
     );
 
     return data;
