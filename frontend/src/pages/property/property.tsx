@@ -25,7 +25,7 @@ import {
 } from '../../store/site-data/selectors';
 import { getUser } from '../../store/user-process/selectors';
 import Bookmark from '../../components/bookmark/bookmark';
-import { AppRoute, UserType } from '../../const';
+import { AppRoute, CityLocation, UserType } from '../../const';
 
 const Property = (): JSX.Element | null => {
   const params = useParams();
@@ -81,9 +81,9 @@ const Property = (): JSX.Element | null => {
   const isPro = host.type === UserType.Pro;
 
   const locations = premiumOffers.map(
-    ({ id: premiumId, location: premiumLocation }) => ({
+    ({ id: premiumId, cityName }) => ({
       id: premiumId,
-      ...premiumLocation,
+      ...(CityLocation[cityName]),
     })
   );
   locations.push({ id, ...location });
@@ -223,6 +223,7 @@ const Property = (): JSX.Element | null => {
                 <Card
                   key={premiumOffer.id}
                   {...premiumOffer}
+                  cityName={premiumOffer.cityName}
                   classPrefix="near-places"
                 />
               ))}

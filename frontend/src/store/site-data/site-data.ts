@@ -53,13 +53,25 @@ export const siteData = createSlice({
         state.isOfferLoading = false;
       })
       .addCase(postOffer.fulfilled, (state, action) => {
-        state.offers.push(action.payload);
+        state.offers.push({
+          ...action.payload,
+          cityName: action.payload.city.name
+        });
       })
       .addCase(editOffer.fulfilled, (state, action) => {
         const updatedOffer = action.payload;
-        state.offers = state.offers.map((offer) => offer.id === updatedOffer.id ? updatedOffer : offer);
-        state.favoriteOffers = state.favoriteOffers.map((offer) => offer.id === updatedOffer.id ? updatedOffer : offer);
-        state.premiumOffers = state.premiumOffers.map((offer) => offer.id === updatedOffer.id ? updatedOffer : offer);
+        state.offers = state.offers.map((offer) => offer.id === updatedOffer.id
+          ? { ...updatedOffer, cityName: updatedOffer.city.name }
+          : offer
+        );
+        state.favoriteOffers = state.favoriteOffers.map((offer) => offer.id === updatedOffer.id
+          ? { ...updatedOffer, cityName: updatedOffer.city.name }
+          : offer
+        );
+        state.premiumOffers = state.premiumOffers.map((offer) => offer.id === updatedOffer.id
+          ? { ...updatedOffer, cityName: updatedOffer.city.name }
+          : offer
+        );
       })
       .addCase(fetchPremiumOffers.fulfilled, (state, action) => {
         state.premiumOffers = action.payload;
@@ -79,9 +91,15 @@ export const siteData = createSlice({
       })
       .addCase(postFavorite.fulfilled, (state, action) => {
         const updatedOffer = action.payload;
-        state.offers = state.offers.map((offer) => offer.id === updatedOffer.id ? updatedOffer : offer);
-        state.premiumOffers = state.premiumOffers.map((offer) => offer.id === updatedOffer.id ? updatedOffer : offer);
-        state.favoriteOffers = state.favoriteOffers.concat(updatedOffer);
+        state.offers = state.offers.map((offer) => offer.id === updatedOffer.id
+          ? { ...updatedOffer, cityName: updatedOffer.city.name }
+          : offer
+        );
+        state.premiumOffers = state.premiumOffers.map((offer) => offer.id === updatedOffer.id
+          ? { ...updatedOffer, cityName: updatedOffer.city.name }
+          : offer
+        );
+        state.favoriteOffers = state.favoriteOffers.concat({ ...updatedOffer, cityName: updatedOffer.city.name });
 
         if (state.offer && state.offer.id === updatedOffer.id) {
           state.offer = updatedOffer;
@@ -89,8 +107,14 @@ export const siteData = createSlice({
       })
       .addCase(deleteFavorite.fulfilled, (state, action) => {
         const updatedOffer = action.payload;
-        state.offers = state.offers.map((offer) => offer.id === updatedOffer.id ? updatedOffer : offer);
-        state.premiumOffers = state.premiumOffers.map((offer) => offer.id === updatedOffer.id ? updatedOffer : offer);
+        state.offers = state.offers.map((offer) => offer.id === updatedOffer.id
+          ? { ...updatedOffer, cityName: updatedOffer.city.name }
+          : offer
+        );
+        state.premiumOffers = state.premiumOffers.map((offer) => offer.id === updatedOffer.id
+          ? { ...updatedOffer, cityName: updatedOffer.city.name }
+          : offer
+        );
         state.favoriteOffers = state.favoriteOffers.filter((favoriteOffer) => favoriteOffer.id !== updatedOffer.id);
 
         if (state.offer && state.offer.id === updatedOffer.id) {

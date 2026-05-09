@@ -11,6 +11,7 @@ import Spinner from '../spinner/spinner';
 import { getCity, getSorting } from '../../store/site-process/selectors';
 import { getIsOffersLoading, selectOffers } from '../../store/site-data/selectors';
 import CardListEmpty from '../card-list-empty/card-list-empty';
+import { CityLocation } from '../../const';
 
 const CardList = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -57,7 +58,7 @@ const CardList = (): JSX.Element => {
           </div>
         </section>)}
       <div className="cities__right-section">
-        {!isEmpty && <Map locations={offers.map(({ id, location }) => ({ id, ...location }))} city={activeCity} activeOffer={activeOffer} />}
+        {!isEmpty && <Map locations={offers.map(({ id, cityName }) => ({ id, ...CityLocation[cityName] }))} city={activeCity} activeOffer={activeOffer} />}
       </div>
     </div>
   );

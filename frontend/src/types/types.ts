@@ -48,6 +48,8 @@ export type Offer = {
   maxAdults: number;
 };
 
+export type OfferPreview = Pick<Offer, 'id' | 'price' | 'rating' | 'title' | 'isPremium' | 'isFavorite' | 'previewImage' | 'type'> & { cityName: CityName };
+
 export type NewOffer = {
   title: string;
   description: string;

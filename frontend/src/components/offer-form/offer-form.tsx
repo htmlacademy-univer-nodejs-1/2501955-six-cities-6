@@ -181,8 +181,9 @@ const OfferForm = <T extends Offer | NewOffer>({
       </div>
       <fieldset className="images-fieldset">
         {images.map((image, index) => (
-          <div key={image} className="form__input-wrapper">
-            <label htmlFor={`image=${index}`} className="offer-form__label">
+          // eslint-disable-next-line react/no-array-index-key
+          <div key={`${image}-${index}`} className="form__input-wrapper">
+            <label htmlFor={`image-${index}`} className="offer-form__label">
           Offer Image #{index + 1}
             </label>
             <input
