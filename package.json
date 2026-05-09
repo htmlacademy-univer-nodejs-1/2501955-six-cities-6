@@ -1,5 +1,5 @@
 {
-  "name": "six-cities",
+  "name": "six-cities-backend",
   "version": "4.0.0",
   "description": "Проект «Шесть городов» от HTML Academy",
   "keywords": [
@@ -58,7 +58,6 @@
     "convict": "6.2.5",
     "convict-format-with-validator": "6.2.0",
     "cors": "2.8.6",
-    "dayjs": "1.11.19",
     "dotenv": "17.3.1",
     "express": "5.2.1",
     "got": "13.0.0",

@@ -187,7 +187,16 @@ paths:
         - $ref: "#/components/parameters/offerId"
       responses:
         "201":
-          description: Предложение добавлено в избранные,
+          description: Предложение добавлено в избранные
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: "#/components/schemas/offer"
+                - type: object
+                  properties:
+                    isFavorite:
+                      example: true
         "400":
           $ref: "#/components/responses/invalidIdError"
         "401":
@@ -204,8 +213,12 @@ paths:
       parameters:
         - $ref: "#/components/parameters/offerId"
       responses:
-        "204":
+        "200":
           description: Предложение удалено из избранных
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/offer"
         "400":
           $ref: "#/components/responses/invalidIdError"
         "401":
